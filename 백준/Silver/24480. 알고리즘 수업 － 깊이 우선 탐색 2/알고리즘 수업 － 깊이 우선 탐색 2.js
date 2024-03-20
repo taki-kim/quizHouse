@@ -6,10 +6,8 @@ const input = require("fs")
   .split("\n");
 const [n, m, node] = input[0].split(" ").map((e) => Number(e));
 const visited = new Array(n).fill(0);
-const graph = [];
-for (let i = 0; i <= n; i++) {
-  graph.push(new Array());
-}
+const graph = [...new Array(n + 1)].map(() => []);
+
 let visitedNum = 1;
 
 function dfs(node, graph, visited) {
@@ -29,9 +27,7 @@ for (let i = 1; i <= m; i++) {
   graph[y].push(x);
 }
 
-for (let i = 0; i < graph.length; i++) {
-  graph[i].sort((a, b) => b - a);
-}
+graph.map((v) => v.sort((a, b) => b - a));
 
 dfs(node, graph, visited);
 
