@@ -23,7 +23,7 @@ const sol = (start, depth) => {
 
   if (depth === M) {
     results.push(
-      [...node]
+      [...node] // 복사값을 사용안하면 원본배열 변경되서 다음 재귀에서 꼬임
         .sort((a, b) => a - b)
         .join(" ")
         .trim()
