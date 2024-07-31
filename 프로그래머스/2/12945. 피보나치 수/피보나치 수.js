@@ -1,12 +1,12 @@
 function solution(n) {
     let answer = 0;
-    let f0 = 0;
-    let f1 = 1;
+    let cur = 0;
+    let next = 1;
     
     for(let i = 2; i <= n; i++){
-        answer = (f0 + f1) % 1234567;
-        f0 = f1;
-        f1 = answer;
+        answer = (cur + next) % 1234567;
+        cur = next;
+        next = answer;
     }
     
     return answer;
