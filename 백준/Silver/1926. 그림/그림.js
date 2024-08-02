@@ -1,84 +1,62 @@
-const filePath = process.platform === "linux" ? "/dev/stdin" : "example.txt";
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 
-class Queue {
-  constructor() {
-    this.items = {};
-    this.headIndex = 0;
-    this.tailIndex = 0;
-  }
-  enqueue(item) {
-    this.items[this.tailIndex] = item;
-    this.tailIndex++;
-  }
-  dequeue() {
-    const item = this.items[this.headIndex];
-    delete this.items[this.headIndex];
-    this.headIndex++;
-    return item;
-  }
-  peek() {
-    return this.items[this.headIndex];
-  }
-  getLength() {
-    return this.tailIndex - this.headIndex;
-  }
-}
+const input = require("fs")
+  .readFileSync(filePath)
+  .toString()
+  .trim()
+  .split("\n");
 
-let paper = require("fs").readFileSync(filePath).toString().trim().split("\n");
+const map = [];
+const answer = [];
 
-const [N, M] = paper.shift().split(" ").map(Number);
-
-paper = paper.map((e) => e.split(" ").map(Number));
-const visited = Array.from(Array(N), () => Array(M).fill(false));
-const directions = [
+const ds = [
+  [0, 1],
+  [0, -1],
   [1, 0],
   [-1, 0],
-  [0, -1],
-  [0, 1],
-]; // 인접한 좌표의 상하좌우 x,y좌표 설정
+];
 
-let widths = [];
+const bfs = (n, m, maxN, maxM, map) => {
+  const queue = [[n, m]];
+  map[n][m] = 2;
+  let count = 1;
 
-const bfsSol = (x, y) => {
-  let queue = new Queue();
-  queue.enqueue([x, y]);
-  let width = 1;
-
-  while (queue.getLength() > 0) {
-    const [curX, curY] = queue.dequeue();
-
+  while (queue.length) {
+    const [curN, curM] = queue.shift();
     for (let i = 0; i < 4; i++) {
-      const newX = curX + directions[i][0];
-      const newY = curY + directions[i][1];
-
+      const newN = curN + ds[i][0];
+      const newM = curM + ds[i][1];
       if (
-        newX >= 0 &&
-        newY >= 0 &&
-        newX < N &&
-        newY < M &&
-        !visited[newX][newY] &&
-        paper[newX][newY] == 1
+        newN >= 0 &&
+        newN < maxN &&
+        newM >= 0 &&
+        newM < maxM &&
+        map[newN][newM] == 1
       ) {
-        visited[newX][newY] = true;
-        width++;
-        queue.enqueue([newX, newY]);
+        queue.push([newN, newM]);
+        map[newN][newM] = 2;
+        count++;
       }
     }
   }
 
-  widths.push(width);
+  answer.push(count);
 };
 
-paper.forEach((e1, i1) => {
-  e1.forEach((e2, i2) => {
-    if (paper[i1][i2] && !visited[i1][i2]) {
-      visited[i1][i2] = true;
-      bfsSol(i1, i2);
-    }
-  });
-});
+const [N, M] = input.shift().split(" ").map(Number);
 
-widths.sort((a, b) => b - a);
-const drawings = widths.length;
-console.log(drawings);
-console.log(drawings > 0 ? widths[0] : 0);
+// set map
+for (let i = 0; i < input.length; i++) {
+  map.push(input[i].split(" ").map(Number));
+}
+
+for (let n = 0; n < N; n++) {
+  for (let m = 0; m < M; m++) {
+    if (map[n][m] === 1) {
+      bfs(n, m, N, M, map);
+    }
+  }
+}
+
+console.log(answer.length);
+console.log(answer.length ? answer.sort((a, b) => b - a)[0] : 0);
