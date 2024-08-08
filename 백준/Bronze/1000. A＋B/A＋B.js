@@ -1,7 +1,3 @@
-let fs = require('fs');
-let input = fs.readFileSync('/dev/stdin').toString().split(' ');
+const input = require("fs").readFileSync("/dev/stdin").toString().trim().split(" ").map(Number);
 
-const A = Number(input[0]);
-const B = Number(input[1]);
-
-console.log(A+B);
+console.log(input[0] + input[1]);
