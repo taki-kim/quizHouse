@@ -1,22 +1,16 @@
-const filePath = process.platform === "linux" ? "/dev/stdin" : "example.txt";
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+const input = require("fs").readFileSync(filePath).toString().split("\n");
 
-const input = require("fs")
-  .readFileSync(filePath)
-  .toString()
-  .trim()
-  .split("\n");
+const N = input.shift();
 
-const N = Number(input.shift());
-let mySet = new Set();
+const mySet = new Set();
 
 for (let i = 0; i < N; i++) {
-  let info = input[i].split(" ");
-  if (info[1] === "enter") {
-    mySet.add(info[0]);
-  } else if (info[1] === "leave") {
-    mySet.delete(info[0]);
-  }
+  let person = input[i].split(" ");
+  if (person[1] === "enter") mySet.add(person[0]);
+  if (person[1] === "leave") mySet.delete(person[0]);
 }
 
-const result = [...mySet].sort().reverse().join("\n");
-console.log(result);
+const answer = [...mySet].sort().reverse().join("\n");
+
+console.log(answer);
