@@ -1,8 +1,6 @@
-const input = require("fs")
-  .readFileSync("/dev/stdin")
-  .toString()
-  .trim()
-  .split("");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+const input = require("fs").readFileSync(filePath).toString().split("");
 
-input.sort((a, b) => b - a);
-console.log(input.join(""));
+const answer = input.sort((a, b) => b - a).join("");
+
+console.log(answer);
