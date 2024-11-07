@@ -1,12 +1,12 @@
-const filePath = process.platform === "linux" ? "/dev/stdin" : "example.txt";
-
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = require("fs").readFileSync(filePath).toString().trim();
-const answer = new Set();
+
+const mySet = new Set();
 
 for (let i = 0; i < input.length; i++) {
   for (let j = i + 1; j <= input.length; j++) {
-    answer.add(input.substring(i, j));
+    mySet.add(input.substring(i, j));
   }
 }
 
-console.log(answer.size);
+console.log([...mySet].length);
