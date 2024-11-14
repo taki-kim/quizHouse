@@ -1,36 +1,29 @@
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = require("fs")
-  .readFileSync("/dev/stdin")
+  .readFileSync(filePath)
   .toString()
-  .trim()
-  .split("\n");
+  .split(" ")
+  .map(Number);
 
-const [n, m] = input[0].split(" ").map(Number);
+const [N, M] = input;
 
-let visited = Array(n + 1).fill(0);
-let answer = Array(m + 1).fill(0);
+const results = [];
+const arr = [];
 
-function dfs(start, curLev) {
-  visited[start] = 1;
-  answer[curLev] = start;
-
-  if (curLev == m) {
-    console.log(
-      answer
-        .slice(1, m + 1)
-        .join(" ")
-        .trim()
-    );
+const DFS = () => {
+  if (arr.length === M) {
+    results.push(arr.join(" "));
+    return;
   }
 
-  for (let x = 1; x <= n; x++) {
-    if (visited[x] == 1) continue;
-    if (visited[x] == 0) {
-      dfs(x, curLev + 1);
-    }
+  for (let i = 1; i <= N; i++) {
+    if (arr.includes(i)) continue;
+    arr.push(i);
+    DFS(i);
+    arr.pop();
   }
-  visited[start] = 0;
-}
+};
 
-for (let i = 1; i <= n; i++) {
-  dfs(i, 1);
-}
+DFS(0);
+
+console.log(results.join("\n").trim());
