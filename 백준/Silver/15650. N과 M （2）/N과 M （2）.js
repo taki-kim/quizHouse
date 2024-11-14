@@ -1,37 +1,30 @@
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = require("fs")
-  .readFileSync("/dev/stdin")
+  .readFileSync(filePath)
   .toString()
-  .trim()
-  .split("\n");
+  .split(" ")
+  .map(Number);
 
-const [n, m] = input[0].split(" ").map(Number);
+const [N, M] = input;
 
-let visited = Array(n + 1).fill(0);
-let arr = Array(m + 1).fill(0);
-let result = [];
+let resultArr = [];
+const results = [];
 
-function dfs(start, curLev) {
-  visited[start] = 1;
-  arr[curLev] = start;
-
-  if (curLev === m) {
-    result.push(arr.slice(1));
-  } else {
-    for (let i = 1; i <= n; i++) {
-      if (visited[i]) continue;
-      if (visited[i] === 0) {
-        dfs(i, curLev + 1);
-      }
-    }
+const BackTracking = (preNum) => {
+  if (resultArr.length === M) {
+    results.push(resultArr.join(" ").trim());
+    return;
   }
 
-  visited[start] = 0;
-}
+  for (let i = 1; i <= N; i++) {
+    if (preNum < i) {
+      resultArr.push(i);
+      BackTracking(i);
+      resultArr.pop();
+    }
+  }
+};
 
-for (let i = 1; i <= n; i++) {
-  dfs(i, 1);
-}
+BackTracking(0);
 
-let ans = result.map((e) => e.sort((a, b) => a - b).join(" "));
-
-console.log([...new Set(ans)].join("\n").trim());
+console.log(results.join("\n").trim());
