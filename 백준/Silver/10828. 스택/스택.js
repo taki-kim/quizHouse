@@ -1,42 +1,61 @@
-const filePath = process.platform === "linux" ? "/dev/stdin" : "example.txt";
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+const input = require("fs").readFileSync(filePath).toString().split("\n");
 
-const input = require("fs")
-  .readFileSync(filePath)
-  .toString()
-  .trim()
-  .split("\n");
+const N = +input.shift();
 
-const N = Number(input.shift());
-
-let stack = [];
-let result = [];
-
-const getResult = (x) => {
-  let str = x.split(" ");
-  switch (str[0]) {
-    case "push":
-      stack.push(Number(str[1]));
-      break;
-    case "top":
-      if (stack.length !== 0) result.push(stack[stack.length - 1]);
-      else if (stack.length === 0) result.push(-1);
-      break;
-    case "size":
-      result.push(stack.length);
-      break;
-    case "empty":
-      if (stack.length !== 0) result.push(0);
-      else if (stack.length === 0) result.push(1);
-      break;
-    case "pop":
-      if (stack.length !== 0) result.push(stack.pop());
-      else if (stack.length === 0) result.push(-1);
-      break;
+class Stack {
+  constructor() {
+    this.stack = [];
   }
-};
+
+  push(item) {
+    this.stack.push(item);
+  }
+  pop() {
+    let item = -1;
+    if (!this.empty()) {
+      item = this.stack.pop();
+    }
+    return item;
+  }
+  top() {
+    let item = -1;
+    if (!this.empty()) {
+      item = this.stack[this.stack.length - 1];
+    }
+    return item;
+  }
+  size() {
+    return this.stack.length;
+  }
+  empty() {
+    if (this.size()) return 0;
+    else return 1;
+  }
+}
+
+const newStack = new Stack();
+const result = [];
 
 for (let i = 0; i < N; i++) {
-  getResult(input[i]);
+  const [command, number] = input[i].split(" ");
+  switch (command) {
+    case "push":
+      newStack.push(number);
+      break;
+    case "pop":
+      result.push(newStack.pop());
+      break;
+    case "size":
+      result.push(newStack.size());
+      break;
+    case "empty":
+      result.push(newStack.empty());
+      break;
+    case "top":
+      result.push(newStack.top());
+      break;
+  }
 }
 
 console.log(result.join("\n").trim());
