@@ -1,30 +1,34 @@
-const input = require("fs")
-  .readFileSync("/dev/stdin")
-  .toString()
-  .trim()
-  .split("\n");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+const input = require("fs").readFileSync(filePath).toString().split("\n");
 
-const n = Number(input[0]);
-let count = 0;
-let stack = [];
+const N = +input.shift();
 
-for (let i = 1; i <= n; i++) {
-  let str = input[i].split("");
-  for (let j = 0; j < str.length; j++) {
-    if (str[j] == "(") {
-      stack.push("0");
-      count++;
-    } else {
+const result = [];
+
+for (let i = 0; i < N; i++) {
+  let answer = "NO";
+  let stack = [];
+  let isbreaked = false;
+
+  for (let j = 0; j < input[i].length; j++) {
+    if (!stack.length && input[i][j] === ")") {
+      answer = "NO";
+      isbreaked = true;
+      break;
+    }
+
+    if (stack.length && input[i][j] === ")") {
       stack.pop();
-      count--;
+    }
+
+    if (input[i][j] === "(") {
+      stack.push("(");
     }
   }
 
-  if (!stack.length && count == 0) {
-    console.log("YES");
-  } else {
-    console.log("NO");
-  }
-  stack = [];
-  count = 0;
+  if (!stack.length && !isbreaked) answer = "YES";
+
+  result.push(answer);
 }
+
+console.log(result.join("\n").trim());
