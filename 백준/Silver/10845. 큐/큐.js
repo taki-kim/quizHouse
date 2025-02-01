@@ -1,68 +1,64 @@
-const filePath = process.platform === "linux" ? "/dev/stdin" : "example.txt";
-
-const input = require("fs")
-  .readFileSync(filePath)
-  .toString()
-  .trim()
-  .split("\n");
-
-input.shift();
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+const input = require("fs").readFileSync(filePath).toString().split("\n");
 
 class Queue {
   constructor() {
     this.items = {};
-    this.headIndex = 0;
-    this.tailIndex = 0;
+    this.tail = 0;
+    this.head = 0;
   }
-  enqueue(item) {
-    this.items[this.tailIndex] = item;
-    this.tailIndex++;
+
+  push(item) {
+    this.items[this.tail] = item;
+    this.tail++;
   }
-  dequeue() {
-    if (this.tailIndex - this.headIndex === 0) {
-      return -1;
-    } else {
-      const item = this.items[this.headIndex];
-      delete this.items[this.headIndex];
-      this.headIndex++;
-      return item;
+  pop() {
+    let pop = -1;
+    if (!this.empty()) {
+      pop = this.items[this.head];
+      delete this.items[this.head];
+      this.head++;
     }
-  }
-  front() {
-    if (this.tailIndex - this.headIndex === 0) {
-      return -1;
-    } else {
-      return this.items[this.headIndex];
-    }
-  }
-  back() {
-    if (this.tailIndex - this.headIndex === 0) {
-      return -1;
-    } else {
-      return this.items[this.tailIndex - 1];
-    }
+    return pop;
   }
   size() {
-    return this.tailIndex - this.headIndex;
+    return this.tail - this.head;
+  }
+  empty() {
+    if (this.size()) return 0;
+    else return 1;
+  }
+  front() {
+    if (this.empty()) return -1;
+    else return this.items[this.head];
+  }
+  back() {
+    if (this.empty()) return -1;
+    else return this.items[this.tail - 1];
   }
 }
 
-let myQueue = new Queue();
-let result = [];
-const queueController = (command) => {
-  let commands = command.split(" ");
-  switch (commands[0]) {
+const N = +input.shift();
+
+const result = [];
+
+const myQueue = new Queue();
+
+for (let i = 0; i < N; i++) {
+  const [command, number] = input[i].split(" ");
+
+  switch (command) {
     case "push":
-      myQueue.enqueue(Number(commands[1]));
+      myQueue.push(number);
       break;
     case "pop":
-      result.push(myQueue.dequeue());
+      result.push(myQueue.pop());
       break;
     case "size":
       result.push(myQueue.size());
       break;
     case "empty":
-      result.push(myQueue.size() === 0 ? 1 : 0);
+      result.push(myQueue.empty());
       break;
     case "front":
       result.push(myQueue.front());
@@ -70,11 +66,9 @@ const queueController = (command) => {
     case "back":
       result.push(myQueue.back());
       break;
+    default:
+      break;
   }
-};
-
-input.forEach((e) => {
-  queueController(e);
-});
+}
 
 console.log(result.join("\n").trim());
