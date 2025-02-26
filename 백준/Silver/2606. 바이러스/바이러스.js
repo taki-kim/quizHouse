@@ -1,38 +1,48 @@
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+
 const input = require("fs")
-  .readFileSync("/dev/stdin")
+  .readFileSync(filePath)
   .toString()
   .trim()
   .split("\n");
 
-let answer = 0;
-const N = Number(input[0]);
-const linked = Number(input[1]);
+const bfs = (start) => {
+  let queue = [];
+  queue.push(start);
 
-let graph = [];
-for (let i = 0; i < N + 1; i++) {
-  graph.push(new Array());
-}
+  visited[start] = 1;
 
-let visited = Array(N).fill(false);
+  while (queue.length) {
+    let v = queue.shift();
 
-for (let i = 2; i < linked + 2; i++) {
-  let pair = input[i].split(" ").map((e) => Number(e));
-  let [x, y] = pair;
-  graph[x].push(y);
-  graph[y]?.push(x);
-}
-
-function dfs(graph, node, visited) {
-  visited[node] = true;
-  answer++;
-
-  for (i of graph[node]) {
-    if (!visited[i]) {
-      dfs(graph, i, visited);
+    for (i of myGraph[v]) {
+      if (!visited[i]) {
+        queue.push(i);
+        visited[i] = 1;
+        count++;
+      }
     }
   }
+};
+
+const N = +input.shift();
+const M = +input.shift();
+
+let count = 0;
+
+const visited = Array(N + 1).fill(0);
+let myGraph = [];
+
+for (let i = 0; i < N + 1; i++) {
+  myGraph.push(new Array());
 }
 
-dfs(graph, 1, visited);
+for (let i = 0; i < M; i++) {
+  let [x, y] = input[i].split(" ").map(Number);
+  myGraph[x].push(y);
+  myGraph[y].push(x);
+}
 
-console.log(answer - 1);
+bfs(1);
+
+console.log(count);
