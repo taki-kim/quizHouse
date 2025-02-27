@@ -1,26 +1,28 @@
-const filePath = process.platform === "linux" ? "/dev/stdin" : "example.txt";
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+const input = require("fs")
+  .readFileSync(filePath)
+  .toString()
+  .split(" ")
+  .map(Number);
 
-const input = require("fs").readFileSync(filePath).toString().trim();
+const [N, M] = input;
 
-const [N, M] = input.split(" ").map(Number);
+const str = [];
+let result = [];
 
-let arr = [];
-const result = [];
-
-const DFS = (preNum) => {
-  if (arr.length === M) {
-    result.push(arr.join(" "));
+const backTracking = (start) => {
+  if (str.length === M) {
+    result.push(str.join(" ").trim());
     return;
   }
 
-  for (let i = 1; i <= N; i++) {
-    if (i < preNum) continue;
-    arr.push(i);
-    DFS(i);
-    arr.pop();
+  for (let i = start; i <= N; i++) {
+    str.push(i);
+    backTracking(i);
+    str.pop();
   }
 };
 
-DFS(0);
+backTracking(1);
 
-console.log(result.join("\n"));
+console.log(result.join("\n").trim());
