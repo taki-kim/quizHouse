@@ -1,40 +1,31 @@
-const filePath = process.platform === "linux" ? "/dev/stdin" : "example.txt";
-
-const input = require("fs")
-  .readFileSync(filePath)
-  .toString()
-  .trim()
-  .split("\n");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+const input = require("fs").readFileSync(filePath).toString().split("\n");
 
 const [N, M] = input.shift().split(" ").map(Number);
-const visited = Array(N).fill(0);
-const results = [];
-const node = [];
 
-const arr = input
-  .shift()
+const arr = input[0]
   .split(" ")
   .map(Number)
   .sort((a, b) => a - b);
 
-const dfs = (start, depth) => {
-  node.push(arr[start]);
-  if (depth === M) {
-    results.push(
-      [...node].join(" ").trim()
-    );
-    node.pop();
+let str = [];
+const result = [];
+
+const backTracking = (prevIndex) => {
+  if (str.length === M) {
+    result.push(str.join(" ").trim());
     return;
   }
+
   for (let i = 0; i < N; i++) {
-    if (arr[i] >= arr[start]) dfs(i, depth + 1);
+    if (i < prevIndex) continue;
+
+    str.push(arr[i]);
+    backTracking(i);
+    str.pop();
   }
-  node.pop();
 };
 
-for (let i = 0; i < N; i++) {
-  dfs(i, 1);
-  visited[i] = 1;
-}
+backTracking(0);
 
-console.log(results.join("\n").trim());
+console.log(result.join("\n").trim());
