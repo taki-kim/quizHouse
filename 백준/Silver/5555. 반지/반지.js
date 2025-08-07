@@ -5,20 +5,15 @@ const input = require("fs")
   .trim()
   .split("\n");
 
-const str = input.shift();
+const target = input.shift();
 const N = +input.shift();
 let count = 0;
 
 for (let i = 0; i < input.length; i++) {
-  let addStr = input[i].slice(0, str.length);
-  let newStr = input[i] + addStr;
+  const ring = input[i];
+  const extendedRing = ring + ring;
 
-  for (let j = 0; j < newStr.length; j++) {
-    if (newStr.slice(j, j + str.length) === str) {
-      count++;
-      break;
-    }
-  }
+  if (extendedRing.includes(target)) count++;
 }
 
 console.log(count);
