@@ -1,29 +1,24 @@
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
-
-const N = require("fs")
+const numbers = require("fs")
   .readFileSync(filePath)
   .toString()
   .trim()
   .split("")
-  .map(Number)
-  .sort((a, b) => a - b);
+  .map(Number);
 
-let count = 1;
+let countArr = Array(10).fill(0);
 
-let arr = Array(10).fill(0);
-
-N.forEach((e, i) => {
-  if (e === 6 || e === 9) {
-    arr[9] += 1;
-  } else {
-    arr[e] += 1;
-  }
-});
-
-if (arr[9] % 2 == 0) {
-  arr[9] = arr[9] / 2;
-} else {
-  arr[9] = parseInt(arr[9] / 2) + 1;
+for (let i = 0; i < numbers.length; i++) {
+  countArr[numbers[i]]++;
 }
 
-console.log(Math.max(...arr));
+let sixAndNine =
+  Math.floor((countArr[6] + countArr[9]) / 2) +
+  ((countArr[6] + countArr[9]) % 2);
+countArr[6] = 0;
+countArr[9] = 0;
+
+const Max = Math.max(...countArr);
+
+if (Max >= sixAndNine) console.log(Max);
+else console.log(sixAndNine);
