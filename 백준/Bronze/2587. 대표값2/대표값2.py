@@ -1,14 +1,12 @@
 import sys
 
+input = sys.stdin.readline
+
 arr = []
-sum = 0
 
 for i in range(5):
-    x = int(sys.stdin.readline())
-    sum += x
-    arr.append(x)
+    num = int(input())
+    arr.append(num)
 
-arr.sort()
-
-print(sum//5)
-print(arr[2])
+print(sum(arr)//5)
+print(sorted(arr)[2])
