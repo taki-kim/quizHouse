@@ -1,6 +1,8 @@
-S = str(input());
+import sys
+input = sys.stdin.readline
 
-alpabet = {
+string = str(input().strip());
+alphbets = {
     "a" : 0,
     "b" : 0,
     "c" : 0,
@@ -29,8 +31,7 @@ alpabet = {
     "z" : 0,
 }
 
-for i in S:
-    alpabet[i] += 1;
+for i in string:
+    alphbets[i] += 1;
 
-result = list(alpabet.values());
-print(" ".join(map(str, result)))
+print(" ".join(map(str, list(alphbets.values()))))
